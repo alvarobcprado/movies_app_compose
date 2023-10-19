@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     testImplementation(libs.junit)
+    testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
