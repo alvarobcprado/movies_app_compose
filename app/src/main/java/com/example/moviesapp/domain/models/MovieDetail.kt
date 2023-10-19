@@ -14,3 +14,4 @@ data class MovieDetail(
     val voteCount: Int,
     val overview: String,
 )
+
