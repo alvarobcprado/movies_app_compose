@@ -16,8 +16,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 
-private const val TIME_OUT = 60_000
-
 val ktorHttpClient = HttpClient(Android) {
     install(Logging) {
         logger = object : Logger {
@@ -42,5 +40,4 @@ val ktorHttpClient = HttpClient(Android) {
     install(DefaultRequest) {
         header(HttpHeaders.ContentType, ContentType.Application.Json)
     }
-
 }
