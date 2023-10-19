@@ -1,4 +1,4 @@
-package com.example.moviesapp.data.datasources.infrastructure
+package com.example.moviesapp.data.datasources.remote.infrastructure
 
 import android.util.Log
 import io.ktor.client.HttpClient
