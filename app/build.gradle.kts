@@ -49,6 +49,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -66,7 +72,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
-    testImplementation(libs.junit)
+    implementation(libs.logback.classic)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.test.ext.junit)

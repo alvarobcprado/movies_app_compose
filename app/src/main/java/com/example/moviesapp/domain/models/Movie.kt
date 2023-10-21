@@ -12,7 +12,7 @@ data class Movie(
     val voteAverage: Double,
     @SerialName("title")
     val title: String,
-    @SerialName("poster_u")
+    @SerialName("poster_url")
     val posterUrl: String,
     @SerialName("genres")
     val genres: List<String>,
