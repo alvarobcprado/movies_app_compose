@@ -77,6 +77,8 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlin.bloc.test)
+    testImplementation(libs.kotlin.mockk.android)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
