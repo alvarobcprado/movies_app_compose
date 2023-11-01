@@ -11,6 +11,8 @@ activity-compose = "1.7.0"
 compose-bom = "2023.03.00"
 ktor = "2.3.5"
 logback = "1.2.3"
+kotlin-bloc = "3.0.0"
+koin-android = "3.5.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -36,6 +38,8 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
 kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "core-ktx" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+kotlin-bloc-compose = { group = "com.github.ptrbrynt.KotlinBloc", name = "compose", version.ref = "kotlin-bloc" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-android" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
