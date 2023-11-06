@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.kotlin.bloc.compose)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlin.bloc.test)
