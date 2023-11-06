@@ -10,10 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.core.appModule
+import com.example.moviesapp.presentation.movie.list.MovieListPage
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
@@ -25,13 +30,35 @@ class MainActivity : ComponentActivity() {
             modules(appModule)
         }
         setContent {
-            MoviesAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+            App()
+        }
+    }
+}
+
+
+@Composable
+fun App() {
+    KoinAndroidContext {
+        MoviesAppTheme {
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "movies") {
+                composable("movies") {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        MovieListPage(onGoToMovieDetail = { movieId ->
+                            navController.navigate("movies/$movieId")
+                        })
+                    }
+                }
+                composable("movies/{movieId}") {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Greeting("Movie Detail")
+                    }
                 }
             }
         }
