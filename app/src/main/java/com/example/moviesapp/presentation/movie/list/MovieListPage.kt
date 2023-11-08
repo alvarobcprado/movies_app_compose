@@ -1,4 +1,8 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.example.moviesapp.presentation.movie.list
 
@@ -21,8 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moviesapp.domain.models.Movie
+import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.ptrbrynt.kotlin_bloc.compose.BlocComposer
 import org.koin.compose.koinInject
 
@@ -30,7 +36,7 @@ import org.koin.compose.koinInject
 @Composable
 fun MovieListPage(onGoToMovieDetail: (Int) -> Unit, movieListBloc: MovieListBloc = koinInject()) {
     LaunchedEffect(movieListBloc) {
-        movieListBloc.add(FetchMovies)
+        movieListBloc.add(MovieListEvent.FetchMovies)
     }
 
     Scaffold(
@@ -51,32 +57,34 @@ fun MovieListPage(onGoToMovieDetail: (Int) -> Unit, movieListBloc: MovieListBloc
 }
 
 @Composable
-fun MovieListTopBar() {
+private fun MovieListTopBar() {
     TopAppBar(title = { Text(text = "Movies") })
 }
 
 @Composable
-fun MovieListContent(
+private fun MovieListContent(
     onGoToMovieDetail: (Int) -> Unit,
     movieListState: MovieListState,
     modifier: Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         when (movieListState) {
-            is Loading -> Box(
+            is MovieListState.Loading -> Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
 
-            is Success -> MovieList(
+            is MovieListState.Success -> MovieList(
                 movies = movieListState.movies,
                 onMovieClick = onGoToMovieDetail,
-                modifier = modifier
             )
 
-            is Error -> Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            is MovieListState.Error -> Box(
+                modifier = modifier,
+                contentAlignment = Alignment.Center
+            ) {
                 val text = when (movieListState.type) {
                     MovieListErrorType.NETWORK_ERROR -> "Network Error"
                     MovieListErrorType.SERVER_ERROR -> "Server Error"
@@ -90,16 +98,16 @@ fun MovieListContent(
 }
 
 @Composable
-fun MovieList(movies: List<Movie>, onMovieClick: (Int) -> Unit, modifier: Modifier) {
+private fun MovieList(movies: List<Movie>, onMovieClick: (Int) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
         items(movies) { movie ->
-            MovieListItem(movie = movie, onMovieClick = onMovieClick, modifier = modifier)
+            MovieListItem(movie = movie, onMovieClick = onMovieClick)
         }
     }
 }
 
 @Composable
-fun MovieListItem(movie: Movie, onMovieClick: (Int) -> Unit, modifier: Modifier) {
+private fun MovieListItem(movie: Movie, onMovieClick: (Int) -> Unit) {
     Row(modifier = Modifier
         .padding(bottom = 16.dp)
         .clickable { onMovieClick(movie.id) }) {
@@ -112,4 +120,47 @@ fun MovieListItem(movie: Movie, onMovieClick: (Int) -> Unit, modifier: Modifier)
             Text(text = movie.voteAverage.toString())
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun DefaultPreview() {
+    MoviesAppTheme {
+        SuccessContentPreview()
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun SuccessContentPreview() {
+    val movieListState = MovieListState.Success(
+        movies = listOf(
+            Movie(
+                id = 1,
+                title = "Title",
+                releaseDate = "Release Date",
+                genres = listOf("Genre 1", "Genre 2"),
+                voteAverage = 1.0,
+                posterUrl = "Poster Url",
+            ),
+            Movie(
+                id = 2,
+                title = "Title",
+                releaseDate = "Release Date",
+                genres = listOf("Genre 1", "Genre 2"),
+                voteAverage = 1.0,
+                posterUrl = "Poster Url",
+            ),
+        )
+    )
+
+    MovieListContent(onGoToMovieDetail = {}, movieListState = movieListState, modifier = Modifier)
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun ErrorContentPreview() {
+    val movieListState = MovieListState.Error(MovieListErrorType.NOT_FOUND)
+
+    MovieListContent(onGoToMovieDetail = {}, movieListState = movieListState, modifier = Modifier)
 }

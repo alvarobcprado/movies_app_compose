@@ -8,26 +8,29 @@ import com.ptrbrynt.kotlin_bloc.core.Bloc
 import com.ptrbrynt.kotlin_bloc.core.Emitter
 
 class MovieListBloc(private val movieRepository: MovieDataRepository) :
-    Bloc<MovieListEvent, MovieListState>(Loading) {
+    Bloc<MovieListEvent, MovieListState>(MovieListState.Loading) {
     init {
-        on<FetchMovies>(mapEventToState = fetchMovies())
+        on<MovieListEvent.FetchMovies>(mapEventToState = fetchMovies())
     }
 
-    private fun fetchMovies(): suspend Emitter<MovieListState>.(FetchMovies) -> Unit = {
-        emit(Loading)
-        val moviesResult = movieRepository.getMovies()
-        moviesResult.fold(
-            onSuccess = { emit(Success(it)) },
-            onFailure = { emit(mapErrorToState(it)) }
-        )
-    }
+    private fun fetchMovies(): suspend Emitter<MovieListState>.(MovieListEvent.FetchMovies) -> Unit =
+        {
+            emit(MovieListState.Loading)
+            val moviesResult = movieRepository.getMovies()
+            moviesResult.fold(
+                onSuccess = { emit(MovieListState.Success(it)) },
+                onFailure = { emit(mapErrorToState(it)) }
+            )
+        }
 
     private fun mapErrorToState(error: Throwable): MovieListState {
-        return when (error) {
-            is NoMoviesException -> Error(MovieListErrorType.NOT_FOUND)
-            is NoInternetException -> Error(MovieListErrorType.NETWORK_ERROR)
-            is ServerException -> Error(MovieListErrorType.SERVER_ERROR)
-            else -> Error(MovieListErrorType.UNKNOWN)
-        }
+        return MovieListState.Error(
+            when (error) {
+                is NoMoviesException -> MovieListErrorType.NOT_FOUND
+                is NoInternetException -> MovieListErrorType.NETWORK_ERROR
+                is ServerException -> MovieListErrorType.SERVER_ERROR
+                else -> MovieListErrorType.UNKNOWN
+            }
+        )
     }
 }

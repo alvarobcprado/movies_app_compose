@@ -51,10 +51,10 @@ class MovieDetailBlocTest {
                     )
                 },
                 build = { MovieDetailBloc(movieRepository) },
-                act = { add(FetchMovieDetail(1)) },
+                act = { add(MovieDetailEvent.FetchMovieDetail(1)) },
                 expected = listOf(
-                    { equals(Loading) },
-                    { equals(Success(movieDetail)) }
+                    { equals(MovieDetailState.Loading) },
+                    { equals(MovieDetailState.Success(movieDetail)) }
                 )
             )
         }
@@ -70,10 +70,10 @@ class MovieDetailBlocTest {
                     )
                 },
                 build = { MovieDetailBloc(movieRepository) },
-                act = { add(FetchMovieDetail(1)) },
+                act = { add(MovieDetailEvent.FetchMovieDetail(1)) },
                 expected = listOf(
-                    { equals(Loading) },
-                    { equals(Error(MovieDetailErrorType.NOT_FOUND)) }
+                    { equals(MovieDetailState.Loading) },
+                    { equals(MovieDetailState.Error(MovieDetailErrorType.NOT_FOUND)) }
                 )
             )
         }
@@ -89,10 +89,10 @@ class MovieDetailBlocTest {
                     )
                 },
                 build = { MovieDetailBloc(movieRepository) },
-                act = { add(FetchMovieDetail(1)) },
+                act = { add(MovieDetailEvent.FetchMovieDetail(1)) },
                 expected = listOf(
-                    { equals(Loading) },
-                    { equals(Error(MovieDetailErrorType.NETWORK_ERROR)) }
+                    { equals(MovieDetailState.Loading) },
+                    { equals(MovieDetailState.Error(MovieDetailErrorType.NETWORK_ERROR)) }
                 )
             )
         }
@@ -110,10 +110,10 @@ class MovieDetailBlocTest {
                     )
                 },
                 build = { MovieDetailBloc(movieRepository) },
-                act = { add(FetchMovieDetail(1)) },
+                act = { add(MovieDetailEvent.FetchMovieDetail(1)) },
                 expected = listOf(
-                    { equals(Loading) },
-                    { equals(Error(MovieDetailErrorType.SERVER_ERROR)) }
+                    { equals(MovieDetailState.Loading) },
+                    { equals(MovieDetailState.Error(MovieDetailErrorType.SERVER_ERROR)) }
                 )
             )
         }
@@ -129,10 +129,10 @@ class MovieDetailBlocTest {
                     )
                 },
                 build = { MovieDetailBloc(movieRepository) },
-                act = { add(FetchMovieDetail(1)) },
+                act = { add(MovieDetailEvent.FetchMovieDetail(1)) },
                 expected = listOf(
-                    { equals(Loading) },
-                    { equals(Error(MovieDetailErrorType.UNKNOWN)) }
+                    { equals(MovieDetailState.Loading) },
+                    { equals(MovieDetailState.Error(MovieDetailErrorType.UNKNOWN)) }
                 )
             )
         }

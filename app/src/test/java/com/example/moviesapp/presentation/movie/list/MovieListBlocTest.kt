@@ -29,10 +29,10 @@ class MovieListBlocTest {
         testBloc(
             setUp = { coEvery { movieRepository.getMovies() } returns Result.success(emptyList()) },
             build = { MovieListBloc(movieRepository) },
-            act = { add(FetchMovies) },
+            act = { add(MovieListEvent.FetchMovies) },
             expected = listOf(
-                { equals(Loading) },
-                { equals(Success(emptyList())) }
+                { equals(MovieListState.Loading) },
+                { equals(MovieListState.Success(emptyList())) }
             )
         )
     }
@@ -46,10 +46,10 @@ class MovieListBlocTest {
                 )
             },
             build = { MovieListBloc(movieRepository) },
-            act = { add(FetchMovies) },
+            act = { add(MovieListEvent.FetchMovies) },
             expected = listOf(
-                { equals(Loading) },
-                { equals(Error(MovieListErrorType.NOT_FOUND)) }
+                { equals(MovieListState.Loading) },
+                { equals(MovieListState.Error(MovieListErrorType.NOT_FOUND)) }
             )
         )
     }
@@ -63,10 +63,10 @@ class MovieListBlocTest {
                 )
             },
             build = { MovieListBloc(movieRepository) },
-            act = { add(FetchMovies) },
+            act = { add(MovieListEvent.FetchMovies) },
             expected = listOf(
-                { equals(Loading) },
-                { equals(Error(MovieListErrorType.NETWORK_ERROR)) }
+                { equals(MovieListState.Loading) },
+                { equals(MovieListState.Error(MovieListErrorType.NETWORK_ERROR)) }
             )
         )
     }
@@ -82,10 +82,10 @@ class MovieListBlocTest {
                 )
             },
             build = { MovieListBloc(movieRepository) },
-            act = { add(FetchMovies) },
+            act = { add(MovieListEvent.FetchMovies) },
             expected = listOf(
-                { equals(Loading) },
-                { equals(Error(MovieListErrorType.SERVER_ERROR)) }
+                { equals(MovieListState.Loading) },
+                { equals(MovieListState.Error(MovieListErrorType.SERVER_ERROR)) }
             )
         )
     }
@@ -95,10 +95,10 @@ class MovieListBlocTest {
         testBloc(
             setUp = { coEvery { movieRepository.getMovies() } returns Result.failure(Exception("Unknown error")) },
             build = { MovieListBloc(movieRepository) },
-            act = { add(FetchMovies) },
+            act = { add(MovieListEvent.FetchMovies) },
             expected = listOf(
-                { equals(Loading) },
-                { equals(Error(MovieListErrorType.UNKNOWN)) }
+                { equals(MovieListState.Loading) },
+                { equals(MovieListState.Error(MovieListErrorType.UNKNOWN)) }
             )
         )
     }
