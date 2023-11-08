@@ -1,23 +1,31 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class
 )
 
 package com.example.moviesapp.presentation.movie.list
 
-import androidx.compose.foundation.clickable
+import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -25,8 +33,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
 import com.example.moviesapp.domain.models.Movie
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.ptrbrynt.kotlin_bloc.compose.BlocComposer
@@ -57,9 +69,7 @@ fun MovieListPage(onGoToMovieDetail: (Int) -> Unit, movieListBloc: MovieListBloc
 }
 
 @Composable
-private fun MovieListTopBar() {
-    TopAppBar(title = { Text(text = "Movies") })
-}
+private fun MovieListTopBar() = TopAppBar(title = { Text(text = "Movies") })
 
 @Composable
 private fun MovieListContent(
@@ -99,25 +109,60 @@ private fun MovieListContent(
 
 @Composable
 private fun MovieList(movies: List<Movie>, onMovieClick: (Int) -> Unit) {
-    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
+    val config = LocalConfiguration.current
+    val orientation = config.orientation
+    val gridCount = if (orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(count = gridCount),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+
+        ) {
         items(movies) { movie ->
-            MovieListItem(movie = movie, onMovieClick = onMovieClick)
+            MovieListItem(
+                movie = movie,
+                onMovieClick = onMovieClick,
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .height(IntrinsicSize.Max)
+            )
         }
     }
 }
 
 @Composable
-private fun MovieListItem(movie: Movie, onMovieClick: (Int) -> Unit) {
-    Row(modifier = Modifier
-        .padding(bottom = 16.dp)
-        .clickable { onMovieClick(movie.id) }) {
-        Text(text = "Image")
-        Spacer(modifier = Modifier.padding(16.dp))
-        Column {
-            Text(text = movie.title)
-            Text(text = movie.releaseDate)
-            Text(text = movie.genres.joinToString(", "))
-            Text(text = movie.voteAverage.toString())
+private fun MovieListItem(
+    movie: Movie,
+    onMovieClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        onClick = { onMovieClick(movie.id) },
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            SubcomposeAsyncImage(
+                model = movie.posterUrl, contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.height(150.dp)
+            )
+            Text(
+                text = movie.title,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .weight(1f),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -130,7 +175,6 @@ fun DefaultPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun SuccessContentPreview() {
     val movieListState = MovieListState.Success(
@@ -141,7 +185,7 @@ private fun SuccessContentPreview() {
                 releaseDate = "Release Date",
                 genres = listOf("Genre 1", "Genre 2"),
                 voteAverage = 1.0,
-                posterUrl = "Poster Url",
+                posterUrl = "https://image.tmdb.org/t/p/w200/2CAL2433ZeIihfX1Hb2139CX0pW.jpg",
             ),
             Movie(
                 id = 2,
@@ -149,7 +193,15 @@ private fun SuccessContentPreview() {
                 releaseDate = "Release Date",
                 genres = listOf("Genre 1", "Genre 2"),
                 voteAverage = 1.0,
-                posterUrl = "Poster Url",
+                posterUrl = "https://image.tmdb.org/t/p/w200/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+            ),
+            Movie(
+                id = 3,
+                title = "Title",
+                releaseDate = "Release Date",
+                genres = listOf("Genre 1", "Genre 2"),
+                voteAverage = 1.0,
+                posterUrl = "https://image.tmdb.org/t/p/w200/9yBVqNruk6Ykrwc32qrK2TIE5xw.jpg",
             ),
         )
     )
@@ -157,10 +209,8 @@ private fun SuccessContentPreview() {
     MovieListContent(onGoToMovieDetail = {}, movieListState = movieListState, modifier = Modifier)
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun ErrorContentPreview() {
     val movieListState = MovieListState.Error(MovieListErrorType.NOT_FOUND)
-
     MovieListContent(onGoToMovieDetail = {}, movieListState = movieListState, modifier = Modifier)
 }

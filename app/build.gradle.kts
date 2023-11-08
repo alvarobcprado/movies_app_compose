@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.moviesapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.moviesapp"
@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.kotlin.bloc.compose)
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlin.bloc.test)
