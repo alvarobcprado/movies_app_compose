@@ -2,21 +2,21 @@
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
 )
 
 package com.example.moviesapp.presentation.movie.list
 
-import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -34,7 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -109,61 +109,55 @@ private fun MovieListContent(
 
 @Composable
 private fun MovieList(movies: List<Movie>, onMovieClick: (Int) -> Unit) {
-    val config = LocalConfiguration.current
-    val orientation = config.orientation
-    val gridCount = if (orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
     LazyVerticalGrid(
-        columns = GridCells.Fixed(count = gridCount),
+        columns = GridCells.Adaptive(minSize = 128.dp),
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-
-        ) {
-        items(movies) { movie ->
+    ) {
+        items(movies, key = { it.id }) { movie ->
             MovieListItem(
                 movie = movie,
                 onMovieClick = onMovieClick,
-                modifier = Modifier
-                    .animateItemPlacement()
-                    .height(IntrinsicSize.Max)
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieListItem(
     movie: Movie,
     onMovieClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Card(
         onClick = { onMovieClick(movie.id) },
-        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            SubcomposeAsyncImage(
-                model = movie.posterUrl, contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.height(150.dp)
-            )
-            Text(
-                text = movie.title,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .weight(1f),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        SubcomposeAsyncImage(
+            model = movie.posterUrl, contentDescription = null,
+            modifier = Modifier.aspectRatio(128 / 192f),
+            contentScale = ContentScale.FillBounds,
+        )
+        Text(
+            text = movie.title,
+            modifier = Modifier
+                .padding(8.dp)
+                .height(50.dp)
+                .fillMaxSize()
+                .wrapContentHeight(),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+        )
+
     }
 }
 
@@ -189,7 +183,7 @@ private fun SuccessContentPreview() {
             ),
             Movie(
                 id = 2,
-                title = "Title",
+                title = "Title really long to test overflow ellipsis line",
                 releaseDate = "Release Date",
                 genres = listOf("Genre 1", "Genre 2"),
                 voteAverage = 1.0,
@@ -197,7 +191,7 @@ private fun SuccessContentPreview() {
             ),
             Movie(
                 id = 3,
-                title = "Title",
+                title = "Title to test overflow ellipsis line",
                 releaseDate = "Release Date",
                 genres = listOf("Genre 1", "Genre 2"),
                 voteAverage = 1.0,
