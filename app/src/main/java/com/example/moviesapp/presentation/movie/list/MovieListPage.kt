@@ -10,7 +10,6 @@ package com.example.moviesapp.presentation.movie.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +22,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.example.moviesapp.domain.models.Movie
+import com.example.moviesapp.ui.components.pages.MovieErrorPage
+import com.example.moviesapp.ui.components.pages.MovieErrorType
+import com.example.moviesapp.ui.components.pages.MovieLoadingPage
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.ptrbrynt.kotlin_bloc.compose.BlocComposer
 import org.koin.compose.koinInject
@@ -51,21 +51,13 @@ fun MovieListPage(onGoToMovieDetail: (Int) -> Unit, movieListBloc: MovieListBloc
         movieListBloc.add(MovieListEvent.FetchMovies)
     }
 
-    Scaffold(
-        topBar = { MovieListTopBar() },
-    )
-    { padding ->
-        BlocComposer(bloc = movieListBloc) { state ->
-            MovieListContent(
-                onGoToMovieDetail = onGoToMovieDetail,
-                movieListState = state,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            )
-        }
+    BlocComposer(bloc = movieListBloc) { state ->
+        MovieListContent(
+            onGoToMovieDetail = onGoToMovieDetail,
+            movieListState = state,
+            onRetry = { movieListBloc.add(MovieListEvent.FetchMovies) },
+        )
     }
-
 }
 
 @Composable
@@ -74,44 +66,47 @@ private fun MovieListTopBar() = TopAppBar(title = { Text(text = "Movies") })
 @Composable
 private fun MovieListContent(
     onGoToMovieDetail: (Int) -> Unit,
+    onRetry: () -> Unit,
     movieListState: MovieListState,
-    modifier: Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        when (movieListState) {
-            is MovieListState.Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+    when (movieListState) {
+        is MovieListState.Loading -> MovieLoadingPage()
+        is MovieListState.Success -> MovieList(
+            movies = movieListState.movies,
+            onMovieClick = onGoToMovieDetail,
+        )
 
-            is MovieListState.Success -> MovieList(
-                movies = movieListState.movies,
-                onMovieClick = onGoToMovieDetail,
-            )
-
-            is MovieListState.Error -> Box(
-                modifier = modifier,
-                contentAlignment = Alignment.Center
-            ) {
-                val text = when (movieListState.type) {
-                    MovieListErrorType.NETWORK_ERROR -> "Network Error"
-                    MovieListErrorType.SERVER_ERROR -> "Server Error"
-                    MovieListErrorType.NOT_FOUND -> "Not Found"
-                    MovieListErrorType.UNKNOWN -> "Unknown Error"
-                }
-                Text(text = text, modifier = modifier)
-            }
-        }
+        is MovieListState.Error -> MovieErrorPage(
+            errorType = movieListState.type,
+            onRetry = onRetry
+        )
     }
 }
 
 @Composable
-private fun MovieList(movies: List<Movie>, onMovieClick: (Int) -> Unit) {
+private fun MovieListSuccess(
+    movies: List<Movie>,
+    onMovieClick: (Int) -> Unit,
+) {
+
+    Scaffold(topBar = { MovieListTopBar() }) { paddingValues ->
+        MovieList(
+            movies = movies,
+            onMovieClick = onMovieClick,
+            modifier = Modifier.padding(paddingValues)
+        )
+    }
+}
+
+@Composable
+private fun MovieList(
+    movies: List<Movie>,
+    onMovieClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 128.dp),
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -200,11 +195,19 @@ private fun SuccessContentPreview() {
         )
     )
 
-    MovieListContent(onGoToMovieDetail = {}, movieListState = movieListState, modifier = Modifier)
+    MovieListContent(
+        onGoToMovieDetail = {},
+        movieListState = movieListState,
+        onRetry = {},
+    )
 }
 
 @Composable
 private fun ErrorContentPreview() {
-    val movieListState = MovieListState.Error(MovieListErrorType.NOT_FOUND)
-    MovieListContent(onGoToMovieDetail = {}, movieListState = movieListState, modifier = Modifier)
+    val movieListState = MovieListState.Error(MovieErrorType.NOT_FOUND)
+    MovieListContent(
+        onGoToMovieDetail = {},
+        movieListState = movieListState,
+        onRetry = {},
+    )
 }

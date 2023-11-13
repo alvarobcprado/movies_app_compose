@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Movies App</string>
+    <string name="retry_btn">Retry</string>
+    <string name="network_error_text">Network Error</string>
+    <string name="server_error_text">Server Error</string>
+    <string name="not_found_error_text">Not Found</string>
+    <string name="unknown_error_text">Unknown Error</string>
+    <string name="error_icon_description">Error Icon</string>
+    <string name="app_bar_error_title">An error has occurred</string>
 </resources>

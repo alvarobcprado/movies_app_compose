@@ -4,6 +4,7 @@ import com.example.moviesapp.domain.NoInternetException
 import com.example.moviesapp.domain.NoMoviesException
 import com.example.moviesapp.domain.ServerException
 import com.example.moviesapp.domain.repositories.MovieDataRepository
+import com.example.moviesapp.ui.components.pages.MovieErrorType
 import com.ptrbrynt.kotlin_bloc.core.Bloc
 import com.ptrbrynt.kotlin_bloc.core.Emitter
 
@@ -26,10 +27,10 @@ class MovieListBloc(private val movieRepository: MovieDataRepository) :
     private fun mapErrorToState(error: Throwable): MovieListState {
         return MovieListState.Error(
             when (error) {
-                is NoMoviesException -> MovieListErrorType.NOT_FOUND
-                is NoInternetException -> MovieListErrorType.NETWORK_ERROR
-                is ServerException -> MovieListErrorType.SERVER_ERROR
-                else -> MovieListErrorType.UNKNOWN
+                is NoMoviesException -> MovieErrorType.NOT_FOUND
+                is NoInternetException -> MovieErrorType.NETWORK_ERROR
+                is ServerException -> MovieErrorType.SERVER_ERROR
+                else -> MovieErrorType.UNKNOWN
             }
         )
     }
