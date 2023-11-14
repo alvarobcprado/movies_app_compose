@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-abstract class BlocViewModel<E, S>(private val initialState: S) : ViewModel() {
-    private val stateFlow = MutableStateFlow<S>(this.initialState)
+abstract class BlocViewModel<S, E>(private val initialState: S) : ViewModel() {
+    private val stateFlow = MutableStateFlow(this.initialState)
     private val eventFlow = MutableSharedFlow<E>()
     val state: StateFlow<S> get() = stateFlow
     val event: SharedFlow<E> get() = eventFlow

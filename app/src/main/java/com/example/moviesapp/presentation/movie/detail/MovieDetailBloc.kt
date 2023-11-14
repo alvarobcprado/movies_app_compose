@@ -8,7 +8,7 @@ import com.example.moviesapp.domain.repositories.MovieDataRepository
 import com.example.moviesapp.ui.components.pages.MovieErrorType
 
 class MovieDetailBloc(private val movieRepository: MovieDataRepository) :
-    BlocViewModel<MovieDetailEvent, MovieDetailState>(MovieDetailState.Loading) {
+    BlocViewModel<MovieDetailState, MovieDetailEvent>(MovieDetailState.Loading) {
     init {
         on<MovieDetailEvent.FetchMovieDetail> { event -> fetchMovieDetail(event.id) }
     }
