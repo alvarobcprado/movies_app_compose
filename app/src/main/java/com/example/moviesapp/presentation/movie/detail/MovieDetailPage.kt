@@ -17,10 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.moviesapp.domain.models.MovieDetail
 import com.example.moviesapp.ui.components.pages.MovieErrorPage
 import com.example.moviesapp.ui.components.pages.MovieLoadingPage
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MovieDetailPage(movieId: Int, movieDetailBloc: MovieDetailBloc = koinInject()) {
+fun MovieDetailPage(movieId: Int, movieDetailBloc: MovieDetailBloc = koinViewModel()) {
     LaunchedEffect(movieDetailBloc) {
         movieDetailBloc.addEvent(MovieDetailEvent.FetchMovieDetail(movieId))
     }
