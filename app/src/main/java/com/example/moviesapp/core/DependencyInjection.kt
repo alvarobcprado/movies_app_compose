@@ -16,5 +16,5 @@ val appModule = module {
     single<MovieRDS> { MovieRDS(get()) }
     single<MovieDataRepository> { MovieRepository(get()) }
     viewModel<MovieListBloc> { MovieListBloc(get()) }
-    single<MovieDetailBloc> { MovieDetailBloc(get()) }
+    viewModel<MovieDetailBloc> { MovieDetailBloc(get()) }
 }

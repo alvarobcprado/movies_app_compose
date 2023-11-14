@@ -17,7 +17,7 @@ abstract class BlocViewModel<E, S>(private val initialState: S) : ViewModel() {
     val state: StateFlow<S> get() = stateFlow
     val event: SharedFlow<E> get() = eventFlow
 
-    protected inline fun <reified Event : E> on(noinline callback: suspend (E) -> Unit) {
+    protected inline fun <reified Event : E> on(noinline callback: suspend (Event) -> Unit) {
         event.filterIsInstance<Event>().onEach { callback(it) }.launchIn(viewModelScope)
     }
 

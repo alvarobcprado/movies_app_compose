@@ -10,27 +10,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.moviesapp.domain.models.MovieDetail
 import com.example.moviesapp.ui.components.pages.MovieErrorPage
 import com.example.moviesapp.ui.components.pages.MovieLoadingPage
-import com.ptrbrynt.kotlin_bloc.compose.BlocComposer
 import org.koin.compose.koinInject
 
 @Composable
 fun MovieDetailPage(movieId: Int, movieDetailBloc: MovieDetailBloc = koinInject()) {
     LaunchedEffect(movieDetailBloc) {
-        movieDetailBloc.add(MovieDetailEvent.FetchMovieDetail(movieId))
+        movieDetailBloc.addEvent(MovieDetailEvent.FetchMovieDetail(movieId))
     }
 
-    BlocComposer(bloc = movieDetailBloc) { state ->
-        MovieDetailContent(
-            movieDetailState = state,
-            onRetry = { movieDetailBloc.add(MovieDetailEvent.FetchMovieDetail(movieId)) },
-        )
-
-    }
+    val state by movieDetailBloc.state.collectAsState()
+    MovieDetailContent(
+        movieDetailState = state,
+        onRetry = { movieDetailBloc.addEvent(MovieDetailEvent.FetchMovieDetail(movieId)) },
+    )
 }
 
 @Composable
