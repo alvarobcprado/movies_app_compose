@@ -12,6 +12,7 @@ class MovieListBloc(private val movieRepository: MovieDataRepository) :
 
     init {
         on<MovieListEvent.FetchMovies> { fetchMovies() }
+        addEvent(MovieListEvent.FetchMovies)
     }
 
 
