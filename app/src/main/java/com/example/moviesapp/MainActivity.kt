@@ -40,9 +40,7 @@ fun App() {
                 composable("movies") {
                     MovieListPage(
                         onGoToMovieDetail = { movieId ->
-                            navController.navigate("movies/$movieId") {
-                                popUpTo("movies")
-                            }
+                            navController.navigate("movies/$movieId")
                         },
                     )
                 }
