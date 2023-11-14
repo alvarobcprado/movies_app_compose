@@ -29,6 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -41,23 +43,24 @@ import com.example.moviesapp.ui.components.pages.MovieErrorPage
 import com.example.moviesapp.ui.components.pages.MovieErrorType
 import com.example.moviesapp.ui.components.pages.MovieLoadingPage
 import com.example.moviesapp.ui.theme.MoviesAppTheme
-import com.ptrbrynt.kotlin_bloc.compose.BlocComposer
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieListPage(onGoToMovieDetail: (Int) -> Unit, movieListBloc: MovieListBloc = koinInject()) {
     LaunchedEffect(movieListBloc) {
-        movieListBloc.add(MovieListEvent.FetchMovies)
+        movieListBloc.addEvent(MovieListEvent.FetchMovies)
     }
 
-    BlocComposer(bloc = movieListBloc) { state ->
-        MovieListContent(
-            onGoToMovieDetail = onGoToMovieDetail,
-            movieListState = state,
-            onRetry = { movieListBloc.add(MovieListEvent.FetchMovies) },
-        )
-    }
+    val state by movieListBloc.state.collectAsState()
+    MovieListContent(
+        onGoToMovieDetail = onGoToMovieDetail,
+        movieListState = state,
+        onRetry = {
+            movieListBloc.addEvent(MovieListEvent.FetchMovies)
+        },
+    )
+
 }
 
 @Composable

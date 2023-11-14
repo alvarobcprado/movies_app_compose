@@ -1,28 +1,28 @@
 package com.example.moviesapp.presentation.movie.list
 
+import com.example.moviesapp.core.BlocViewModel
 import com.example.moviesapp.domain.NoInternetException
 import com.example.moviesapp.domain.NoMoviesException
 import com.example.moviesapp.domain.ServerException
 import com.example.moviesapp.domain.repositories.MovieDataRepository
 import com.example.moviesapp.ui.components.pages.MovieErrorType
-import com.ptrbrynt.kotlin_bloc.core.Bloc
-import com.ptrbrynt.kotlin_bloc.core.Emitter
 
 class MovieListBloc(private val movieRepository: MovieDataRepository) :
-    Bloc<MovieListEvent, MovieListState>(MovieListState.Loading) {
+    BlocViewModel<MovieListEvent, MovieListState>(MovieListState.Loading) {
+
     init {
-        on<MovieListEvent.FetchMovies>(mapEventToState = fetchMovies())
+        on<MovieListEvent.FetchMovies> { fetchMovies() }
     }
 
-    private fun fetchMovies(): suspend Emitter<MovieListState>.(MovieListEvent.FetchMovies) -> Unit =
-        {
-            emit(MovieListState.Loading)
-            val moviesResult = movieRepository.getMovies()
-            moviesResult.fold(
-                onSuccess = { emit(MovieListState.Success(it)) },
-                onFailure = { emit(mapErrorToState(it)) }
-            )
-        }
+
+    private suspend fun fetchMovies() {
+        setState(MovieListState.Loading)
+        val moviesResult = movieRepository.getMovies()
+        moviesResult.fold(
+            onSuccess = { setState(MovieListState.Success(it)) },
+            onFailure = { setState(mapErrorToState(it)) }
+        )
+    }
 
     private fun mapErrorToState(error: Throwable): MovieListState {
         return MovieListState.Error(

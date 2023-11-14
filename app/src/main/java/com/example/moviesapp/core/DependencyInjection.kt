@@ -8,12 +8,13 @@ import com.example.moviesapp.presentation.movie.detail.MovieDetailBloc
 import com.example.moviesapp.presentation.movie.list.MovieListBloc
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
     single<HttpClient> { buildHttpClient(Android.create()) }
     single<MovieRDS> { MovieRDS(get()) }
     single<MovieDataRepository> { MovieRepository(get()) }
-    single<MovieListBloc> { MovieListBloc(get()) }
+    viewModel<MovieListBloc> { MovieListBloc(get()) }
     single<MovieDetailBloc> { MovieDetailBloc(get()) }
 }

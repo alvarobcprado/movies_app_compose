@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.moviesapp.core.appModule
 import com.example.moviesapp.presentation.movie.detail.MovieDetailPage
 import com.example.moviesapp.presentation.movie.list.MovieListPage
@@ -40,19 +38,15 @@ fun App() {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "movies") {
                 composable("movies") {
-                    MovieListPage(onGoToMovieDetail = { movieId ->
-                        navController.navigate("movies/$movieId")
-                    })
-                }
-                composable(
-                    "movies/{movieId}",
-                    arguments = listOf(
-                        navArgument("movieId") {
-                            type =
-                                NavType.StringType
+                    MovieListPage(
+                        onGoToMovieDetail = { movieId ->
+                            navController.navigate("movies/$movieId") {
+                                popUpTo("movies")
+                            }
                         },
-                    ),
-                ) { navBackStackEntry ->
+                    )
+                }
+                composable("movies/{movieId}") { navBackStackEntry ->
                     val movieId = navBackStackEntry.arguments?.getString("movieId")?.toInt() ?: 0
                     MovieDetailPage(movieId = movieId)
                 }
