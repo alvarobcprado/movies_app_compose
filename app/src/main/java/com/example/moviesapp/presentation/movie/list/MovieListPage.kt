@@ -74,7 +74,7 @@ private fun MovieListContent(
 ) {
     when (movieListState) {
         is MovieListState.Loading -> MovieLoadingPage()
-        is MovieListState.Success -> MovieList(
+        is MovieListState.Success -> MovieListSuccess(
             movies = movieListState.movies,
             onMovieClick = onGoToMovieDetail,
         )
