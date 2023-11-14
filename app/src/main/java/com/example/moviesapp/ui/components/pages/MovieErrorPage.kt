@@ -2,7 +2,9 @@
 
 package com.example.moviesapp.ui.components.pages
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moviesapp.R
 
@@ -28,11 +31,12 @@ fun MovieErrorPage(errorType: MovieErrorType, modifier: Modifier = Modifier, onR
     Scaffold(topBar = {
         TopAppBar(title = { Text(stringResource(R.string.app_bar_error_title)) })
     }) { paddingValues ->
-        Box(
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             val text = when (errorType) {
                 MovieErrorType.NETWORK_ERROR -> stringResource(R.string.network_error_text)
@@ -60,4 +64,10 @@ enum class MovieErrorType {
     SERVER_ERROR,
     NOT_FOUND,
     UNKNOWN
+}
+
+@Preview
+@Composable
+fun MovieErrorPagePreview() {
+    MovieErrorPage(errorType = MovieErrorType.NETWORK_ERROR, onRetry = {})
 }
