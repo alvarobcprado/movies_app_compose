@@ -7,20 +7,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.moviesapp.core.MoviesAppRoutingPreview
 import com.example.moviesapp.domain.models.MovieDetail
 import com.example.moviesapp.ui.components.pages.MovieErrorPage
 import com.example.moviesapp.ui.components.pages.MovieLoadingPage
+import com.example.moviesapp.ui.components.widgets.MoviesTopBar
+import com.example.moviesapp.ui.theme.MoviesAppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MovieDetailPage(movieId: Int, movieDetailBloc: MovieDetailBloc = koinViewModel()) {
+fun MovieDetailPage(
+    movieId: Int,
+    movieDetailBloc: MovieDetailBloc = koinViewModel(),
+) {
     LaunchedEffect(movieDetailBloc) {
         movieDetailBloc.addEvent(MovieDetailEvent.FetchMovieDetail(movieId))
     }
@@ -33,15 +38,9 @@ fun MovieDetailPage(movieId: Int, movieDetailBloc: MovieDetailBloc = koinViewMod
 }
 
 @Composable
-private fun MovieDetailAppBar(movieName: String) {
-    TopAppBar(title = { Text(text = movieName) })
-}
-
-
-@Composable
 private fun MovieDetailContent(
     movieDetailState: MovieDetailState,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
 ) {
     when (movieDetailState) {
         is MovieDetailState.Loading -> MovieLoadingPage()
@@ -55,7 +54,7 @@ private fun MovieDetailContent(
 
 @Composable
 fun MovieDetailSuccess(movieDetail: MovieDetail) {
-    Scaffold(topBar = { MovieDetailAppBar(movieName = movieDetail.title) }) { paddingValues ->
+    Scaffold(topBar = { MoviesTopBar(title = movieDetail.title) }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             Text(text = movieDetail.title)
         }
@@ -66,7 +65,11 @@ fun MovieDetailSuccess(movieDetail: MovieDetail) {
 @Preview
 @Composable
 fun MovieDetailPagePreview() {
-    MovieDetailPageSuccessPreview()
+    MoviesAppTheme {
+        MoviesAppRoutingPreview {
+            MovieDetailPageSuccessPreview()
+        }
+    }
 }
 
 @Composable

@@ -25,11 +25,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moviesapp.R
+import com.example.moviesapp.ui.components.widgets.MoviesTopBar
 
 @Composable
 fun MovieErrorPage(errorType: MovieErrorType, modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Scaffold(topBar = {
-        TopAppBar(title = { Text(stringResource(R.string.app_bar_error_title)) })
+        MoviesTopBar(title = stringResource(R.string.app_bar_error_title))
     }) { paddingValues ->
         Column(
             modifier = modifier

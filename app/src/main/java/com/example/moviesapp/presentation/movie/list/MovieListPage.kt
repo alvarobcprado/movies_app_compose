@@ -3,7 +3,8 @@
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
 )
 
 package com.example.moviesapp.presentation.movie.list
@@ -26,7 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,31 +37,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.example.moviesapp.core.LocalNavController
+import com.example.moviesapp.core.MoviesAppRoutingPreview
+import com.example.moviesapp.core.goToMovieDetail
 import com.example.moviesapp.domain.models.Movie
 import com.example.moviesapp.ui.components.pages.MovieErrorPage
 import com.example.moviesapp.ui.components.pages.MovieErrorType
 import com.example.moviesapp.ui.components.pages.MovieLoadingPage
+import com.example.moviesapp.ui.components.widgets.MoviesTopBar
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieListPage(
-    onGoToMovieDetail: (Int) -> Unit,
     movieListBloc: MovieListBloc = koinViewModel()
 ) {
     val state by movieListBloc.state.collectAsState()
+    val navController = LocalNavController.current
     MovieListContent(
-        onGoToMovieDetail = onGoToMovieDetail,
+        onGoToMovieDetail = { movieId ->
+            navController.goToMovieDetail(movieId)
+        },
         movieListState = state,
         onRetry = {
             movieListBloc.addEvent(MovieListEvent.FetchMovies)
         },
     )
 }
-
-@Composable
-private fun MovieListTopBar() = TopAppBar(title = { Text(text = "Movies") })
 
 @Composable
 private fun MovieListContent(
@@ -88,8 +91,7 @@ private fun MovieListSuccess(
     movies: List<Movie>,
     onMovieClick: (Int) -> Unit,
 ) {
-
-    Scaffold(topBar = { MovieListTopBar() }) { paddingValues ->
+    Scaffold(topBar = { MoviesTopBar(title = "Movies") }) { paddingValues ->
         MovieList(
             movies = movies,
             onMovieClick = onMovieClick,
@@ -160,7 +162,9 @@ private fun MovieListItem(
 @Composable
 fun DefaultPreview() {
     MoviesAppTheme {
-        SuccessContentPreview()
+        MoviesAppRoutingPreview {
+            SuccessContentPreview()
+        }
     }
 }
 
