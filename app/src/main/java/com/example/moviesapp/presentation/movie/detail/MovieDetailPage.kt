@@ -2,17 +2,32 @@
 
 package com.example.moviesapp.presentation.movie.detail
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
 import com.example.moviesapp.core.MoviesAppRoutingPreview
 import com.example.moviesapp.domain.models.MovieDetail
 import com.example.moviesapp.ui.components.pages.MovieErrorPage
@@ -53,11 +68,81 @@ private fun MovieDetailContent(
 }
 
 @Composable
-fun MovieDetailSuccess(movieDetail: MovieDetail) {
+private fun MovieDetailSuccess(movieDetail: MovieDetail) {
     Scaffold(topBar = { MoviesTopBar(title = movieDetail.title) }) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
-            Text(text = movieDetail.title)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Row {
+                SubcomposeAsyncImage(
+                    model = movieDetail.posterUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .heightIn(min = 180.dp, max = 200.dp)
+                        .aspectRatio(2 / 3.5f),
+                    contentScale = ContentScale.FillBounds,
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                MovieDetailInfoColumn(movieDetail = movieDetail)
+            }
         }
+        Divider(modifier = Modifier.padding(vertical = 16.dp))
+        Text(
+            text = "Overview",
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+        )
+        Text(text = movieDetail.overview, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
+private fun MovieDetailInfoLine(
+    title: String,
+    value: String,
+) {
+    Row(verticalAlignment = Alignment.Top) {
+        Text(
+            text = "$title: ",
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+        )
+        Text(text = value, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
+private fun MovieDetailInfoColumn(movieDetail: MovieDetail) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        MovieDetailInfoLine(
+            title = "Title",
+            value = movieDetail.title,
+        )
+        MovieDetailInfoLine(
+            title = "Original title",
+            value = movieDetail.originalTitle,
+        )
+        MovieDetailInfoLine(
+            title = "Release date",
+            value = movieDetail.releaseDate,
+        )
+        MovieDetailInfoLine(
+            title = "Language",
+            value = movieDetail.originalLanguage,
+        )
+        MovieDetailInfoLine(
+            title = "Genres", value = movieDetail.genres.joinToString(", ")
+        )
+        MovieDetailInfoLine(
+            title = "Rating",
+            value = movieDetail.voteAverage.toString(),
+        )
+        MovieDetailInfoLine(
+            title = "Vote count",
+            value = movieDetail.voteCount.toString(),
+        )
     }
 }
 
