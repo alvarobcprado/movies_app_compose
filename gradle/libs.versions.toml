@@ -17,6 +17,8 @@ kotlin-mockk = "1.12.3"
 navigation-compose = "2.5.3"
 coil-compose = "2.5.0"
 material3-compose = "1.1.2"
+android-room = "2.4.1"
+ksp = "1.8.10-1.0.9"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -48,11 +50,16 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 kotlin-mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "kotlin-mockk" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-compose" }
+android-room = { group = "androidx.room", name = "room-runtime", version.ref = "android-room" }
+android-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "android-room" }
+android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "android-room" }
+android-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "android-room" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "org-jetbrains-kotlin-android" }
+com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 
