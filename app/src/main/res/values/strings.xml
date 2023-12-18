@@ -7,4 +7,6 @@
     <string name="unknown_error_text">Unknown Error</string>
     <string name="error_icon_description">Error Icon</string>
     <string name="app_bar_error_title">An error has occurred</string>
+    <string name="bottomNavItemMovies">Movies</string>
+    <string name="bottomNavItemFavorites">Favorites</string>
 </resources>

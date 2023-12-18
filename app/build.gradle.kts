@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.android.room)
     implementation(libs.android.room.ktx)
+    implementation(libs.androidx.material.compose)
     ksp(libs.android.room.compiler)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter)

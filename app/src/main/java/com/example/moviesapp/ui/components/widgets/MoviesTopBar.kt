@@ -11,9 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.moviesapp.core.LocalNavController
-import com.example.moviesapp.core.MoviesAppRoutingPreview
-import com.example.moviesapp.core.canGoBack
+import com.example.moviesapp.presentation.core.routing.LocalNavController
+import com.example.moviesapp.presentation.core.routing.MoviesAppRoutingPreview
+import com.example.moviesapp.presentation.core.routing.canGoBack
 
 @Composable
 fun MoviesTopBar(title: String) {
@@ -23,13 +23,15 @@ fun MoviesTopBar(title: String) {
     TopAppBar(
         title = { Text(text = title) },
         navigationIcon =
-            if(canGoBack) {
-                {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
+        if (canGoBack) {
+            {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
-            }else {{}}
+            }
+        } else {
+            {}
+        }
     )
 }
 

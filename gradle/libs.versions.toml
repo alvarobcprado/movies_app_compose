@@ -20,6 +20,7 @@ coil-compose = "2.5.0"
 material3-compose = "1.1.2"
 android-room = "2.4.1"
 ksp = "1.8.10-1.0.9"
+material-compose = "1.3.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -56,6 +57,7 @@ android-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "
 android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "android-room" }
 android-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "android-room" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit-ktx" }
+androidx-material-compose = { group = "androidx.compose.material", name = "material", version.ref = "material-compose" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

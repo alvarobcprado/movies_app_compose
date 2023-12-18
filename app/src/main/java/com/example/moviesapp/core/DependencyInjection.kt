@@ -11,7 +11,7 @@ import com.example.moviesapp.presentation.movie.detail.MovieDetailBloc
 import com.example.moviesapp.presentation.movie.list.MovieListBloc
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
-import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -21,7 +21,7 @@ val appModule = module {
     single<HttpClient> { buildHttpClient(Android.create()) }
     single<MoviesDB> {
         Room.databaseBuilder(
-            androidApplication(),
+            androidContext(),
             MoviesDB::class.java,
             DATABASE_NAME
         ).build()

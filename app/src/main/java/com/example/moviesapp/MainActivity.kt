@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.example.moviesapp.core.MoviesAppRouting
 import com.example.moviesapp.core.appModule
+import com.example.moviesapp.presentation.core.routing.MoviesAppRouting
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

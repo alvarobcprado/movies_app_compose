@@ -28,8 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import com.example.moviesapp.core.MoviesAppRoutingPreview
 import com.example.moviesapp.domain.models.MovieDetail
+import com.example.moviesapp.presentation.core.routing.MoviesAppRoutingPreview
 import com.example.moviesapp.ui.components.pages.MovieErrorPage
 import com.example.moviesapp.ui.components.pages.MovieLoadingPage
 import com.example.moviesapp.ui.components.widgets.MoviesTopBar
