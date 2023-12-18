@@ -10,14 +10,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Entity
 data class MovieDetail(
-    @SerialName("id")
-    @PrimaryKey(autoGenerate = false)
-    val id: Int,
     @SerialName("backdrop_url")
     val backdropImageUrl: String,
     @SerialName("genres")
     @TypeConverters(StringListConverter::class)
     val genres: List<String>,
+    @SerialName("id")
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     @SerialName("imdb_id")
     val imdbId: String,
     @SerialName("original_language")
