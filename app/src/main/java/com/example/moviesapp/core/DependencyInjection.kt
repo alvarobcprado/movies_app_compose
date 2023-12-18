@@ -28,7 +28,7 @@ val appModule = module {
     }
     single<MovieCDS> { get<MoviesDB>().movieCDS() }
     single<MovieRDS> { MovieRDS(get()) }
-    single<MovieDataRepository> { MovieRepository(get()) }
+    single<MovieDataRepository> { MovieRepository(get(), get()) }
     viewModel<MovieListBloc> { MovieListBloc(get()) }
     viewModel<MovieDetailBloc> { MovieDetailBloc(get()) }
 }
