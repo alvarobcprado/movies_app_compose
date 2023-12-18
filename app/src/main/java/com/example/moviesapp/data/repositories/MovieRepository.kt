@@ -62,4 +62,13 @@ class MovieRepository(private val movieRDS: MovieRDS, private val movieCDS: Movi
             Result.failure(e)
         }
     }
+
+    override suspend fun getFavoriteMovieIdList(): Result<List<Int>> {
+        return try {
+            val movieIds = movieCDS.getFavoriteMovieIdList()
+            Result.success(movieIds)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

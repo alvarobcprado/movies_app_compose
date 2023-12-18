@@ -9,6 +9,9 @@ import com.example.moviesapp.domain.models.MovieDetail
 interface MovieCDS {
     @Query("SELECT * FROM movieDetail")
     fun getFavoriteMovieList(): List<MovieDetail>
+    
+    @Query("SELECT id FROM movieDetail")
+    fun getFavoriteMovieIdList(): List<Int>
 
     @Query("SELECT * FROM movieDetail WHERE id = :id")
     fun getFavoriteMovie(id: Int): MovieDetail
@@ -18,5 +21,6 @@ interface MovieCDS {
 
     @Query("DELETE FROM movieDetail WHERE id = :movieId")
     fun removeFavoriteMovie(movieId: Int)
+
 
 }

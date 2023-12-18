@@ -14,4 +14,6 @@ interface MovieDataRepository {
     suspend fun saveFavoriteMovie(movie: MovieDetail): Result<Unit>
 
     suspend fun deleteFavoriteMovie(movie: MovieDetail): Result<Unit>
+
+    suspend fun getFavoriteMovieIdList(): Result<List<Int>>
 }
